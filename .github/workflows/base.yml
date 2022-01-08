@@ -1,0 +1,36 @@
+name: base
+on: [push]
+jobs:
+  do-the-thing:
+    runs-on: ubuntu-latest
+    steps:
+      - name: asreadme
+        run: |
+          docker build -t static-binaries-arm .
+          mkdir -p dist
+          rm -rf /dist/*
+          docker run -v $(pwd)/dist:/out static-binaries-arm bash -c "cp -r /dist/* /out"
+      - name: sams-version
+        run: echo "::set-output name=version::3.2"
+        id: version
+      - name: create-release
+        uses: actions/create-release@v1
+        id: create_release
+        with:
+          draft: false
+          prerelease: false
+          release_name: ${{ steps.version.outputs.version }}
+          tag_name: ${{ steps.version.outputs.version}}
+          body: "Automated build of smauel's kernel"
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      - name: upload-release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./release.zip
+          asset_name: release.zip
+          asset_content_type: application/zip
+
