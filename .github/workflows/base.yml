@@ -5,6 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: asreadme
+        uses: actions/checkout@v1
         run: |
           docker build -t static-binaries-arm .
           mkdir -p dist
