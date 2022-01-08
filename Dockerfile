@@ -1,6 +1,6 @@
 # source: https://github.com/petrosagg/armv7hf-python-dockerhub/blob/master/Dockerfile
 
-FROM resin/armv7hf-debian-qemu
+FROM resin/armv7hf-debian-qemu AS BUILDER
 
 RUN [ "cross-build-start" ]
 
@@ -45,3 +45,7 @@ RUN set -x \
   && ls -al /dist
 
 RUN [ "cross-build-end" ]
+
+FROM alpine:latest
+
+COPY --from=builder /dist /dist

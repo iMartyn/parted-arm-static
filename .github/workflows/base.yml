@@ -13,7 +13,7 @@ jobs:
           docker run -v $(pwd)/dist:/out static-binaries-arm bash -c "cp -r /dist/* /out"
           cd dist
           tar -zcvf . ../release.tgz
-      - name: sams-version
+      - name: parted-version
         run: echo "::set-output name=version::3.2"
         id: version
       - name: create-release
